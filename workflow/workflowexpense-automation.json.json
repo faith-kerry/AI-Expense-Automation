@@ -1,0 +1,296 @@
+{
+  "name": "AI Expense Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0ea71d58-3100-4ba2-a3d5-fb9cad48bf33",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68f08928-8785-4c5f-8561-b595d988b016",
+              "name": "employee_name",
+              "value": "Faith Kerubo",
+              "type": "string"
+            },
+            {
+              "id": "8bce1b71-d676-4341-9702-9e417b5a4f89",
+              "name": "employee_email",
+              "value": "faith@example.com",
+              "type": "string"
+            },
+            {
+              "id": "628f3711-4cea-427f-bc23-bff18b6a33a2",
+              "name": "vendor",
+              "value": "Naivas Supermarket",
+              "type": "string"
+            },
+            {
+              "id": "143f9a5f-9a0b-474e-8623-a241aa6ff2a2",
+              "name": "amount",
+              "value": 25000,
+              "type": "number"
+            },
+            {
+              "id": "65ed61b7-fa76-411d-94cf-64975a4c7c9b",
+              "name": "category",
+              "value": "Office Supplies",
+              "type": "string"
+            },
+            {
+              "id": "9865b18e-943e-444e-b5e0-fd4b50d6b8b4",
+              "name": "expense_date",
+              "value": "2026-07-19",
+              "type": "string"
+            },
+            {
+              "id": "5c46e527-294c-4cb6-8763-b06a2e46adbe",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "96c44ace-027d-4af0-85fe-b3c36dcc8549",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-flash-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3-flash-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expense assistant.\n\nAnalyze the following expense information and return a JSON object with these fields:\n\n{\n  \"employee_name\": \"\",\n  \"employee_email\": \"\",\n  \"vendor\": \"\",\n  \"amount\": 0,\n  \"category\": \"\",\n  \"expense_date\": \"\",\n  \"approval_required\": true\n}\n\nExpense Information:\n\nEmployee: {{ $json.employee_name }}\nEmail: {{ $json.employee_email }}\nVendor: {{ $json.vendor }}\nAmount: {{ $json.amount }}\nCategory: {{ $json.category }}\nDate: {{ $json.expense_date }}\n\nIf the amount is greater than 20000, set approval_required to true.\nOtherwise set it to false.\n\nReturn ONLY valid JSON."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "192bb913-9f69-4505-aa1c-6a09aff7c528",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "obQkSfRyzLRICnp2",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json.content.parts[0].text;\n\nconst parsed = JSON.parse(text);\n\nreturn {\n  json: parsed,\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        144
+      ],
+      "id": "cf6615af-65bb-4b52-9558-82dfd3a2d24f",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "168hoEpAjpPllUnYG9xpIKW9pq74fylE_rfTGiKk9SoQ",
+          "mode": "list",
+          "cachedResultName": "AI Expense Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/168hoEpAjpPllUnYG9xpIKW9pq74fylE_rfTGiKk9SoQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/168hoEpAjpPllUnYG9xpIKW9pq74fylE_rfTGiKk9SoQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Employee Name": "={{ $json.employee_name }}",
+            "Employee Email": "={{ $json.employee_email }}",
+            "Vendor": "={{ $json.vendor }}",
+            "Amount": "={{ $json.amount }}",
+            "Category": "={{ $json.category }}",
+            "Expense Date": "={{ $json.expense_date }}",
+            "Approval Required": "={{ $json.approval_required }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Employee Name",
+              "displayName": "Employee Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Employee Email",
+              "displayName": "Employee Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Vendor",
+              "displayName": "Vendor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Amount",
+              "displayName": "Amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Expense Date",
+              "displayName": "Expense Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approval Required",
+              "displayName": "Approval Required",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        864,
+        144
+      ],
+      "id": "33bab5e4-3f96-428d-b0d5-5a9a68b0eb25",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YvKeQwR3VRPOWNTr",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "850a3933-1346-4239-91ee-dad258fc132c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6dea500a16e5ff73cc1fe0467f66486ffbefd3039c4818fd88e8b297d837a117"
+  },
+  "nodeGroups": [],
+  "id": "f29VUVMlQcI2yToW",
+  "tags": []
+}
