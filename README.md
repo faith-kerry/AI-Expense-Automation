@@ -239,7 +239,7 @@ workflow/expense-automation.json
 
 Software Engineer | AI Enthusiast | Economist
 
-GitHub: https://github.com/faithkerry
+GitHub: https://github.com/faith-kerry
 
 ---
 
