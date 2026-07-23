@@ -233,6 +233,14 @@ workflow/expense-automation.json
 
 ---
 
+## Deployment
+
+- Platform: n8n Cloud
+- Status: Published
+- AI Model: Google Gemini
+- Database: Google Sheets
+- Trigger: Webhook (POST)
+
 # 👩‍💻 Author
 
 **Faith Kerubo**
